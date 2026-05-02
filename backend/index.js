@@ -28,6 +28,7 @@ app.use('/api', limiter);
 app.use('/api/events',    require('./routes/events'));
 app.use('/api/auth',      require('./routes/auth'));
 app.use('/api/favorites', require('./routes/favorites'));
+app.use('/api/account',   require('./routes/account'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
