@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { getFavorites, addFavorite, removeFavorite } from '../api/favorites';
+import { useToast } from './ToastContext';
 
 const AuthContext = createContext(null);
 
@@ -13,6 +14,7 @@ const isTokenExpired = (token) => {
 };
 
 export function AuthProvider({ children }) {
+  const { addToast } = useToast();
   const [user, setUser]           = useState(() => JSON.parse(localStorage.getItem('user') || 'null'));
   const [token, setToken]         = useState(() => localStorage.getItem('token') || null);
   const [favorites, setFavorites] = useState([]);
@@ -30,24 +32,25 @@ export function AuthProvider({ children }) {
     setToken(jwt);
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', jwt);
-  }, []);
+    addToast(`Bienvenue, ${userData.email.split('@')[0]} !`);
+  }, [addToast]);
 
-  // Vérifie le token au démarrage et déconnecte si expiré
   useEffect(() => {
     if (token && isTokenExpired(token)) {
       logout();
+      addToast('Session expirée, veuillez vous reconnecter.', 'error');
       return;
     }
     if (!token) return;
-
     getFavorites(token)
       .then(setFavorites)
       .catch((err) => {
         if (err.message?.includes('401') || err.message?.toLowerCase().includes('token')) {
           logout();
+          addToast('Session expirée, veuillez vous reconnecter.', 'error');
         }
       });
-  }, [token, logout]);
+  }, [token, logout, addToast]);
 
   const isFavorite = useCallback((eventId) =>
     favorites.some(f => f.id === eventId), [favorites]);
@@ -57,11 +60,13 @@ export function AuthProvider({ children }) {
     if (isFavorite(event.id)) {
       await removeFavorite(token, event.id);
       setFavorites(prev => prev.filter(f => f.id !== event.id));
+      addToast('Retiré des favoris.', 'info');
     } else {
       await addFavorite(token, event);
       setFavorites(prev => [...prev, event]);
+      addToast('♥ Ajouté aux favoris !');
     }
-  }, [token, isFavorite]);
+  }, [token, isFavorite, addToast]);
 
   return (
     <AuthContext.Provider value={{ user, token, favorites, login, logout, isFavorite, toggleFavorite }}>

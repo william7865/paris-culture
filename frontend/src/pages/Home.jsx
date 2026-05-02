@@ -17,14 +17,16 @@ export default function Home() {
   const navigate = useNavigate();
   const [q, setQ]               = useState('');
   const [category, setCategory] = useState('all');
+  const [sort, setSort]         = useState('date_asc');
   const [page, setPage]         = useState(1);
   const [showAuth, setShowAuth] = useState(false);
 
   usePageTitle('Agenda culturel parisien');
-  const { data, loading, error } = useEvents(q, category, page);
+  const { data, loading, error } = useEvents(q, category, page, sort);
 
   const handleSearch   = useCallback((v) => { setQ(v);        setPage(1); }, []);
   const handleCategory = useCallback((v) => { setCategory(v); setPage(1); }, []);
+  const handleSort     = useCallback((v) => { setSort(v);     setPage(1); }, []);
 
   const totalPages = data ? Math.ceil(data.total_count / LIMIT) : 0;
   const featured   = data?.results?.[0] ?? null;
@@ -60,7 +62,14 @@ export default function Home() {
               </p>
             )}
           </div>
-          <CategoryFilter active={category} onChange={handleCategory} />
+          <div className="controls__bottom">
+            <CategoryFilter active={category} onChange={handleCategory} />
+            <select className="sort-select" value={sort} onChange={e => handleSort(e.target.value)} aria-label="Trier les événements">
+              <option value="date_asc">Date croissante</option>
+              <option value="date_desc">Date décroissante</option>
+              <option value="free_first">Gratuit en premier</option>
+            </select>
+          </div>
         </div>
 
         {loading && <Loader />}

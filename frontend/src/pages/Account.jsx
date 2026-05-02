@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMe, updateEmail, updatePassword, deleteAccount } from '../api/account';
 import usePageTitle from '../hooks/usePageTitle';
+import { useToast } from '../context/ToastContext';
 
 const SectionTitle = ({ children }) => <h2 className="account-section__title">{children}</h2>;
 
@@ -22,6 +23,7 @@ const StatusMsg = ({ msg }) => {
 
 export default function Account() {
   const { token, user, login, logout } = useAuth();
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
@@ -58,6 +60,7 @@ export default function Account() {
       login({ ...user, email: newEmail }, token);
       setProfile(p => ({ ...p, email: newEmail }));
       setNewEmail(''); setEmailPassword('');
+      addToast('Email mis à jour avec succès.');
       setEmailMsg({ type: 'ok', text: 'Email mis à jour avec succès.' });
     } catch (err) {
       setEmailMsg({ type: 'error', text: err.message });
@@ -74,6 +77,7 @@ export default function Account() {
     try {
       await updatePassword(token, currentPwd, newPwd);
       setCurrentPwd(''); setNewPwd(''); setConfirmPwd('');
+      addToast('Mot de passe mis à jour avec succès.');
       setPwdMsg({ type: 'ok', text: 'Mot de passe mis à jour avec succès.' });
     } catch (err) {
       setPwdMsg({ type: 'error', text: err.message });

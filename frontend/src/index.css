@@ -550,6 +550,84 @@ body::after {
 }
 .detail-link:hover { background: var(--gold-light); }
 
+/* ── Toasts ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  z-index: 9000;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .8rem 1.2rem;
+  min-width: 260px;
+  max-width: 360px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  animation: toastIn .25s ease;
+  pointer-events: all;
+  cursor: pointer;
+}
+.toast--success { border-left: 3px solid #6fcf97; }
+.toast--error   { border-left: 3px solid var(--error); }
+.toast--info    { border-left: 3px solid var(--gold); }
+.toast__icon {
+  font-size: .85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.toast--success .toast__icon { color: #6fcf97; }
+.toast--error   .toast__icon { color: var(--error); }
+.toast--info    .toast__icon { color: var(--gold); }
+.toast__message { font-size: .85rem; color: var(--text); line-height: 1.4; }
+
+/* ── Sort select ── */
+.controls__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.sort-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  padding: .38rem .75rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+  appearance: none;
+  padding-right: 1.8rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a6f60'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .6rem center;
+}
+.sort-select:focus, .sort-select:hover { border-color: var(--gold); color: var(--cream); }
+
+/* ── Favorites search ── */
+.favorites-search {
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
 /* ── Header btn ── */
 .header-user-menu { display: flex; gap: .5rem; }
 

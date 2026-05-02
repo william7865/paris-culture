@@ -1,7 +1,7 @@
 const BASE = '/api/events';
 
-export async function fetchEvents({ q = '', category = 'all', page = 1 } = {}, signal) {
-  const params = new URLSearchParams({ page });
+export async function fetchEvents({ q = '', category = 'all', page = 1, sort = 'date_asc' } = {}, signal) {
+  const params = new URLSearchParams({ page, sort });
   if (q) params.set('q', q);
   if (category && category !== 'all') params.set('category', category);
 

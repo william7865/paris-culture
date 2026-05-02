@@ -9,6 +9,12 @@ const CACHE_TTL = parseInt(process.env.CACHE_TTL_MS) || 300_000;
 
 const ALLOWED_CATEGORIES = ['Concert', 'Expo', 'Festival', 'Ecrans', 'Sport', 'Théâtre', 'Enfants'];
 
+const ALLOWED_SORT = {
+  'date_asc':   'date_start asc',
+  'date_desc':  'date_start desc',
+  'free_first': 'price_type asc',
+};
+
 const SELECT_FIELDS = 'id,url,title,lead_text,date_start,date_end,address_name,address_zipcode,qfap_tags,cover_url,price_type';
 
 const sanitizeQ = (q) => {
@@ -24,6 +30,7 @@ router.get('/', async (req, res) => {
 
   const category = ALLOWED_CATEGORIES.includes(req.query.category) ? req.query.category : null;
   const q = sanitizeQ(req.query.q);
+  const sort = ALLOWED_SORT[req.query.sort] ?? ALLOWED_SORT['date_asc'];
   const offset = (page - 1) * LIMIT;
 
   const today = new Date().toISOString().split('T')[0];
@@ -34,7 +41,7 @@ router.get('/', async (req, res) => {
   const params = new URLSearchParams({
     select: SELECT_FIELDS,
     where: conditions.join(' AND '),
-    order_by: 'date_start asc',
+    order_by: sort,
     limit: LIMIT,
     offset,
   });
