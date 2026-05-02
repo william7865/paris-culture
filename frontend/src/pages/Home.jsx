@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useEvents from '../hooks/useEvents';
 import { useAuth } from '../context/AuthContext';
+import usePageTitle from '../hooks/usePageTitle';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
 import EventCard from '../components/EventCard';
@@ -19,6 +20,7 @@ export default function Home() {
   const [page, setPage]         = useState(1);
   const [showAuth, setShowAuth] = useState(false);
 
+  usePageTitle('Agenda culturel parisien');
   const { data, loading, error } = useEvents(q, category, page);
 
   const handleSearch   = useCallback((v) => { setQ(v);        setPage(1); }, []);

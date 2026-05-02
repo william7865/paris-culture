@@ -8,7 +8,7 @@ const authHeaders = (token) => ({
 export const getFavorites = async (token) => {
   const res = await fetch(BASE, { headers: authHeaders(token) });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+  if (!res.ok) throw new Error(res.status === 401 ? '401' : (data.error || 'Erreur serveur'));
   return data;
 };
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMe, updateEmail, updatePassword, deleteAccount } from '../api/account';
+import usePageTitle from '../hooks/usePageTitle';
 
 const SectionTitle = ({ children }) => <h2 className="account-section__title">{children}</h2>;
 
@@ -42,6 +43,7 @@ export default function Account() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteZone, setShowDeleteZone] = useState(false);
 
+  usePageTitle('Mon compte');
   useEffect(() => {
     if (!token) { navigate('/'); return; }
     getMe(token).then(setProfile).catch(() => logout());

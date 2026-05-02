@@ -2,8 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import EventCard from '../components/EventCard';
 import AuthModal from '../components/AuthModal';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function Favorites() {
+  usePageTitle('Mes favoris');
   const { user, favorites, logout } = useAuth();
   const navigate = useNavigate();
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { fetchEvent } from '../api/events';
 import { useAuth } from '../context/AuthContext';
+import usePageTitle from '../hooks/usePageTitle';
 
 const formatDate = (iso) => {
   if (!iso) return '';
@@ -44,6 +45,7 @@ export default function EventDetail() {
   );
   if (!event) return null;
 
+  usePageTitle(event.title);
   const tags     = event.qfap_tags?.split(';').map(t => t.trim()).filter(Boolean) ?? [];
   const favorited = isFavorite(event.id);
 
