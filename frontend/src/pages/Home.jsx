@@ -1,27 +1,22 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useEvents from '../hooks/useEvents';
-import { useAuth } from '../context/AuthContext';
 import usePageTitle from '../hooks/usePageTitle';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
 import EventCard from '../components/EventCard';
 import Loader from '../components/Loader';
-import AuthModal from '../components/AuthModal';
 
 const LIMIT = 12;
-const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
 export default function Home() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  usePageTitle('Agenda culturel parisien');
   const [q, setQ]               = useState('');
   const [category, setCategory] = useState('all');
   const [sort, setSort]         = useState('date_asc');
   const [page, setPage]         = useState(1);
-  const [showAuth, setShowAuth] = useState(false);
 
-  usePageTitle('Agenda culturel parisien');
   const { data, loading, error } = useEvents(q, category, page, sort);
 
   const handleSearch   = useCallback((v) => { setQ(v);        setPage(1); }, []);
@@ -34,23 +29,7 @@ export default function Home() {
 
   return (
     <>
-      <header className="site-header">
-        <div className="site-header__inner">
-          <span className="site-header__wordmark">Paris <span>Culture</span></span>
-          <div className="site-header__rule" />
-          <span className="site-header__date">{today}</span>
-          {user ? (
-            <div className="header-user-menu">
-              <button className="header-btn" onClick={() => navigate('/favoris')}>♡ Favoris</button>
-              <button className="header-btn" onClick={() => navigate('/compte')}>Mon compte</button>
-            </div>
-          ) : (
-            <button className="header-btn" onClick={() => setShowAuth(true)}>Connexion</button>
-          )}
-        </div>
-      </header>
-
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+      <Header />
 
       <main className="container">
         <div className="controls">
@@ -101,6 +80,8 @@ export default function Home() {
           </>
         )}
       </main>
+
+      <Footer />
     </>
   );
 }

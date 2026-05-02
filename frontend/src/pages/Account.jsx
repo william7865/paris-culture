@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { getMe, updateEmail, updatePassword, deleteAccount } from '../api/account';
 import usePageTitle from '../hooks/usePageTitle';
 import { useToast } from '../context/ToastContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const SectionTitle = ({ children }) => <h2 className="account-section__title">{children}</h2>;
 
@@ -22,6 +24,7 @@ const StatusMsg = ({ msg }) => {
 };
 
 export default function Account() {
+  usePageTitle('Mon compte');
   const { token, user, login, logout } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -33,19 +36,18 @@ export default function Account() {
   const [emailMsg, setEmailMsg]           = useState(null);
   const [emailLoading, setEmailLoading]   = useState(false);
 
-  const [currentPwd, setCurrentPwd]   = useState('');
-  const [newPwd, setNewPwd]           = useState('');
-  const [confirmPwd, setConfirmPwd]   = useState('');
-  const [pwdMsg, setPwdMsg]           = useState(null);
-  const [pwdLoading, setPwdLoading]   = useState(false);
+  const [currentPwd, setCurrentPwd] = useState('');
+  const [newPwd, setNewPwd]         = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [pwdMsg, setPwdMsg]         = useState(null);
+  const [pwdLoading, setPwdLoading] = useState(false);
 
-  const [deletePwd, setDeletePwd]         = useState('');
-  const [deleteConfirm, setDeleteConfirm] = useState('');
-  const [deleteMsg, setDeleteMsg]         = useState(null);
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deletePwd, setDeletePwd]           = useState('');
+  const [deleteConfirm, setDeleteConfirm]   = useState('');
+  const [deleteMsg, setDeleteMsg]           = useState(null);
+  const [deleteLoading, setDeleteLoading]   = useState(false);
   const [showDeleteZone, setShowDeleteZone] = useState(false);
 
-  usePageTitle('Mon compte');
   useEffect(() => {
     if (!token) { navigate('/'); return; }
     getMe(token).then(setProfile).catch(() => logout());
@@ -70,9 +72,7 @@ export default function Account() {
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     setPwdMsg(null);
-    if (newPwd !== confirmPwd) {
-      return setPwdMsg({ type: 'error', text: 'Les mots de passe ne correspondent pas.' });
-    }
+    if (newPwd !== confirmPwd) return setPwdMsg({ type: 'error', text: 'Les mots de passe ne correspondent pas.' });
     setPwdLoading(true);
     try {
       await updatePassword(token, currentPwd, newPwd);
@@ -86,9 +86,7 @@ export default function Account() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    if (deleteConfirm !== 'SUPPRIMER') {
-      return setDeleteMsg({ type: 'error', text: 'Tapez exactement SUPPRIMER pour confirmer.' });
-    }
+    if (deleteConfirm !== 'SUPPRIMER') return setDeleteMsg({ type: 'error', text: 'Tapez exactement SUPPRIMER pour confirmer.' });
     setDeleteMsg(null);
     setDeleteLoading(true);
     try {
@@ -101,24 +99,16 @@ export default function Account() {
     }
   };
 
-  const initials = profile?.email?.[0]?.toUpperCase() ?? '?';
+  const initials    = profile?.email?.[0]?.toUpperCase() ?? '?';
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : '';
 
   return (
     <>
-      <header className="site-header">
-        <div className="site-header__inner">
-          <button className="back-btn" onClick={() => navigate(-1)}>← Retour</button>
-          <div className="site-header__rule" />
-          <span className="site-header__wordmark">Paris <span>Culture</span></span>
-        </div>
-      </header>
+      <Header backBtn />
 
       <main className="container container--detail">
-
-        {/* ── Profil résumé ── */}
         <div className="account-hero">
           <div className="account-avatar">{initials}</div>
           <div className="account-hero__info">
@@ -133,7 +123,6 @@ export default function Account() {
           </div>
         </div>
 
-        {/* ── Modifier l'email ── */}
         <section className="account-section">
           <SectionTitle>Modifier l'email</SectionTitle>
           <p className="account-section__current">Actuel : <strong>{profile?.email}</strong></p>
@@ -149,7 +138,6 @@ export default function Account() {
           </form>
         </section>
 
-        {/* ── Modifier le mot de passe ── */}
         <section className="account-section">
           <SectionTitle>Modifier le mot de passe</SectionTitle>
           <form className="account-form" onSubmit={handlePasswordUpdate}>
@@ -160,14 +148,12 @@ export default function Account() {
             <Field label="Confirmer le nouveau mot de passe" type="password" value={confirmPwd}
               onChange={setConfirmPwd} placeholder="Répétez le nouveau mot de passe" autoComplete="new-password" />
             <StatusMsg msg={pwdMsg} />
-            <button type="submit" className="account-btn"
-              disabled={pwdLoading || !currentPwd || !newPwd || !confirmPwd}>
+            <button type="submit" className="account-btn" disabled={pwdLoading || !currentPwd || !newPwd || !confirmPwd}>
               {pwdLoading ? 'Mise à jour…' : 'Mettre à jour le mot de passe'}
             </button>
           </form>
         </section>
 
-        {/* ── Déconnexion ── */}
         <section className="account-section">
           <SectionTitle>Session</SectionTitle>
           <p className="account-section__desc">Déconnectez-vous de votre compte sur cet appareil.</p>
@@ -176,12 +162,9 @@ export default function Account() {
           </button>
         </section>
 
-        {/* ── Zone danger ── */}
         <section className="account-section account-section--danger">
           <SectionTitle>Zone de danger</SectionTitle>
-          <p className="account-section__desc">
-            La suppression est définitive. Toutes vos données (compte, favoris) seront effacées.
-          </p>
+          <p className="account-section__desc">La suppression est définitive. Toutes vos données (compte, favoris) seront effacées.</p>
           {!showDeleteZone ? (
             <button className="account-btn account-btn--danger" onClick={() => setShowDeleteZone(true)}>
               Supprimer mon compte
@@ -192,8 +175,7 @@ export default function Account() {
                 onChange={setDeletePwd} placeholder="Confirmez votre identité" autoComplete="current-password" />
               <div className="modal__field">
                 <label>Tapez <strong>SUPPRIMER</strong> pour confirmer</label>
-                <input type="text" value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)}
-                  placeholder="SUPPRIMER" />
+                <input type="text" value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder="SUPPRIMER" />
               </div>
               <StatusMsg msg={deleteMsg} />
               <div className="account-form__row">
@@ -209,8 +191,9 @@ export default function Account() {
             </form>
           )}
         </section>
-
       </main>
+
+      <Footer />
     </>
   );
 }

@@ -75,10 +75,11 @@ body::after {
   text-transform: uppercase;
   color: var(--cream);
   white-space: nowrap;
+  transition: opacity .2s;
 }
-.site-header__wordmark span {
-  color: var(--gold);
-}
+.site-header__wordmark:hover { opacity: .8; }
+.site-header__wordmark span { color: var(--gold); }
+.site-header__nav { display: flex; gap: .5rem; align-items: center; }
 .site-header__rule {
   flex: 1;
   height: 1px;
@@ -921,6 +922,58 @@ body::after {
 }
 .fav-btn:hover { color: var(--gold); border-color: var(--gold); }
 .fav-btn--active { color: var(--gold); border-color: var(--gold); background: rgba(200,146,58,.08); }
+
+/* ── Footer ── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: 4rem;
+}
+.site-footer__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex;
+  gap: 4rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.site-footer__brand { max-width: 320px; display: flex; flex-direction: column; gap: .75rem; }
+.site-footer__wordmark {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.site-footer__wordmark span { color: var(--gold); }
+.site-footer__tagline { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+.site-footer__links { display: flex; gap: 3rem; flex-wrap: wrap; }
+.site-footer__col { display: flex; flex-direction: column; gap: .6rem; }
+.site-footer__col-title {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: .2rem;
+}
+.site-footer__col a {
+  font-size: .82rem;
+  color: var(--muted);
+  transition: color .2s;
+}
+.site-footer__col a:hover { color: var(--cream); }
+.site-footer__bottom {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+  text-align: center;
+  font-size: .72rem;
+  color: var(--muted);
+  letter-spacing: .06em;
+  max-width: 100%;
+}
 
 /* ── Responsive ── */
 @media (max-width: 900px) {

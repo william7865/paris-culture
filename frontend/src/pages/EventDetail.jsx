@@ -3,6 +3,8 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { fetchEvent } from '../api/events';
 import { useAuth } from '../context/AuthContext';
 import usePageTitle from '../hooks/usePageTitle';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const formatDate = (iso) => {
   if (!iso) return '';
@@ -17,10 +19,12 @@ export default function EventDetail() {
   const navigate = useNavigate();
   const { user, isFavorite, toggleFavorite } = useAuth();
 
-  const [event, setEvent]   = useState(state?.event ?? null);
-  const [loading, setLoading] = useState(!state?.event);
-  const [error, setError]   = useState(null);
+  const [event, setEvent]           = useState(state?.event ?? null);
+  const [loading, setLoading]       = useState(!state?.event);
+  const [error, setError]           = useState(null);
   const [favLoading, setFavLoading] = useState(false);
+
+  usePageTitle(event?.title ?? null);
 
   useEffect(() => {
     if (state?.event) return;
@@ -36,28 +40,33 @@ export default function EventDetail() {
     setFavLoading(false);
   };
 
-  if (loading) return <div className="state-message" style={{ minHeight: '60vh' }}><p>Chargement…</p></div>;
-  if (error)   return (
-    <div className="state-message state-message--error" style={{ minHeight: '60vh' }}>
-      <p>{error}</p>
-      <button onClick={() => navigate(-1)}>← Retour</button>
-    </div>
+  if (loading) return (
+    <>
+      <Header backBtn />
+      <div className="state-message" style={{ minHeight: '60vh' }}><p>Chargement…</p></div>
+      <Footer />
+    </>
   );
+
+  if (error) return (
+    <>
+      <Header backBtn />
+      <div className="state-message state-message--error" style={{ minHeight: '60vh' }}>
+        <p>{error}</p>
+        <button onClick={() => navigate(-1)}>← Retour</button>
+      </div>
+      <Footer />
+    </>
+  );
+
   if (!event) return null;
 
-  usePageTitle(event.title);
   const tags     = event.qfap_tags?.split(';').map(t => t.trim()).filter(Boolean) ?? [];
   const favorited = isFavorite(event.id);
 
   return (
     <>
-      <header className="site-header">
-        <div className="site-header__inner">
-          <button className="back-btn" onClick={() => navigate(-1)}>← Retour</button>
-          <div className="site-header__rule" />
-          <span className="site-header__wordmark">Paris <span>Culture</span></span>
-        </div>
-      </header>
+      <Header backBtn />
 
       <main className="container container--detail">
         {event.cover_url && (
@@ -124,6 +133,8 @@ export default function EventDetail() {
           </a>
         )}
       </main>
+
+      <Footer />
     </>
   );
 }
