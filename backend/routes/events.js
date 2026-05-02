@@ -15,6 +15,22 @@ const ALLOWED_SORT = {
   'free_first': 'price_type asc',
 };
 
+const getDateCondition = (filter) => {
+  const d = (offset = 0) => {
+    const dt = new Date();
+    dt.setDate(dt.getDate() + offset);
+    return dt.toISOString().split('T')[0];
+  };
+  if (filter === 'today') return `date_start <= "${d()}" AND date_end >= "${d()}"`;
+  if (filter === 'week')  return `date_end >= "${d()}" AND date_start <= "${d(7)}"`;
+  if (filter === 'weekend') {
+    const now = new Date();
+    const toSat = (6 - now.getDay() + 7) % 7 || 7;
+    return `date_start >= "${d(toSat)}" AND date_start <= "${d(toSat + 1)}"`;
+  }
+  return null;
+};
+
 const SELECT_FIELDS = 'id,url,title,lead_text,date_start,date_end,address_name,address_zipcode,qfap_tags,cover_url,price_type';
 
 const sanitizeQ = (q) => {
@@ -34,7 +50,8 @@ router.get('/', async (req, res) => {
   const offset = (page - 1) * LIMIT;
 
   const today = new Date().toISOString().split('T')[0];
-  const conditions = [`date_end >= "${today}"`];
+  const dateCondition = getDateCondition(req.query.dateFilter) ?? `date_end >= "${today}"`;
+  const conditions = [dateCondition];
   if (category) conditions.push(`qfap_tags like "%${category}%"`);
   if (q) conditions.push(`search(title, "${q}")`);
 

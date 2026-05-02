@@ -923,6 +923,99 @@ body::after {
 .fav-btn:hover { color: var(--gold); border-color: var(--gold); }
 .fav-btn--active { color: var(--gold); border-color: var(--gold); background: rgba(200,146,58,.08); }
 
+/* ── Quick date filter ── */
+.quick-date-filter {
+  display: flex;
+  gap: .4rem;
+  flex-wrap: wrap;
+  margin-bottom: .75rem;
+}
+.quick-date-filter__btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+  padding: .3rem .85rem;
+  transition: all .2s;
+}
+.quick-date-filter__btn:hover { color: var(--cream); border-color: var(--muted); }
+.quick-date-filter__btn--active {
+  background: var(--surface);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── Recently viewed ── */
+.recently-viewed {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.recently-viewed__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 1.25rem;
+}
+.recently-viewed__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5px;
+  background: var(--border);
+}
+@media (max-width: 900px) { .recently-viewed__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .recently-viewed__grid { grid-template-columns: 1fr; background: none; } }
+
+/* ── Detail actions ── */
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+.detail-action-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  padding: .7rem 1.2rem;
+  transition: all .2s;
+}
+.detail-action-btn:hover { color: var(--cream); border-color: var(--muted); }
+
+/* ── Similar events ── */
+.similar-events {
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.similar-events__title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 1.5rem;
+}
+.similar-events__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  background: var(--border);
+}
+@media (max-width: 700px) {
+  .similar-events__grid { grid-template-columns: 1fr; background: none; gap: 1px; }
+}
+
 /* ── Footer ── */
 .site-footer {
   border-top: 1px solid var(--border);

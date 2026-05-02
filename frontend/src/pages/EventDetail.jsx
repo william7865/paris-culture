@@ -5,6 +5,10 @@ import { useAuth } from '../context/AuthContext';
 import usePageTitle from '../hooks/usePageTitle';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SimilarEvents from '../components/SimilarEvents';
+import { saveRecent } from '../components/RecentlyViewed';
+import { exportIcs, shareEvent } from '../utils/eventActions';
+import { useToast } from '../context/ToastContext';
 
 const formatDate = (iso) => {
   if (!iso) return '';
@@ -18,6 +22,7 @@ export default function EventDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user, isFavorite, toggleFavorite } = useAuth();
+  const { addToast } = useToast();
 
   const [event, setEvent]           = useState(state?.event ?? null);
   const [loading, setLoading]       = useState(!state?.event);
@@ -61,7 +66,10 @@ export default function EventDetail() {
 
   if (!event) return null;
 
-  const tags     = event.qfap_tags?.split(';').map(t => t.trim()).filter(Boolean) ?? [];
+  useEffect(() => { if (event) saveRecent(event); }, [event]);
+
+  const tags      = event.qfap_tags?.split(';').map(t => t.trim()).filter(Boolean) ?? [];
+  const firstTag  = tags[0] ?? null;
   const favorited = isFavorite(event.id);
 
   return (
@@ -127,11 +135,21 @@ export default function EventDetail() {
           <div className="detail-description" dangerouslySetInnerHTML={{ __html: event.description }} />
         )}
 
-        {event.url && (
-          <a href={event.url} target="_blank" rel="noopener noreferrer" className="detail-link">
-            Voir sur paris.fr →
-          </a>
-        )}
+        <div className="detail-actions">
+          {event.url && (
+            <a href={event.url} target="_blank" rel="noopener noreferrer" className="detail-link">
+              Voir sur paris.fr →
+            </a>
+          )}
+          <button className="detail-action-btn" onClick={() => exportIcs(event)} title="Ajouter au calendrier">
+            📅 Calendrier
+          </button>
+          <button className="detail-action-btn" onClick={() => shareEvent(event, addToast)} title="Partager">
+            ↗ Partager
+          </button>
+        </div>
+
+        <SimilarEvents tag={firstTag} excludeId={event.id} />
       </main>
 
       <Footer />

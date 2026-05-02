@@ -5,6 +5,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
+import QuickDateFilter from '../components/QuickDateFilter';
+import RecentlyViewed from '../components/RecentlyViewed';
 import EventCard from '../components/EventCard';
 import Loader from '../components/Loader';
 
@@ -15,13 +17,15 @@ export default function Home() {
   const [q, setQ]               = useState('');
   const [category, setCategory] = useState('all');
   const [sort, setSort]         = useState('date_asc');
+  const [dateFilter, setDateFilter] = useState('');
   const [page, setPage]         = useState(1);
 
-  const { data, loading, error } = useEvents(q, category, page, sort);
+  const { data, loading, error } = useEvents(q, category, page, sort, dateFilter);
 
-  const handleSearch   = useCallback((v) => { setQ(v);        setPage(1); }, []);
-  const handleCategory = useCallback((v) => { setCategory(v); setPage(1); }, []);
-  const handleSort     = useCallback((v) => { setSort(v);     setPage(1); }, []);
+  const handleSearch     = useCallback((v) => { setQ(v);          setPage(1); }, []);
+  const handleCategory   = useCallback((v) => { setCategory(v);   setPage(1); }, []);
+  const handleSort       = useCallback((v) => { setSort(v);       setPage(1); }, []);
+  const handleDateFilter = useCallback((v) => { setDateFilter(v); setPage(1); }, []);
 
   const totalPages = data ? Math.ceil(data.total_count / LIMIT) : 0;
   const featured   = data?.results?.[0] ?? null;
@@ -41,6 +45,7 @@ export default function Home() {
               </p>
             )}
           </div>
+          <QuickDateFilter active={dateFilter} onChange={handleDateFilter} />
           <div className="controls__bottom">
             <CategoryFilter active={category} onChange={handleCategory} />
             <select className="sort-select" value={sort} onChange={e => handleSort(e.target.value)} aria-label="Trier les événements">
@@ -81,6 +86,9 @@ export default function Home() {
         )}
       </main>
 
+      <div className="container" style={{ paddingTop: 0 }}>
+        <RecentlyViewed />
+      </div>
       <Footer />
     </>
   );
