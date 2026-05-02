@@ -1,0 +1,24 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+:root {
+  --color-primary: #c9a227;
+  --color-bg: #0f0f13;
+  --color-surface: #1a1a24;
+  --color-card: #1e1e2c;
+  --color-text: #e8e8f0;
+  --color-text-muted: #8888aa;
+  --color-border: #2a2a3c;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
