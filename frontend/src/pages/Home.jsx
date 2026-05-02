@@ -36,7 +36,10 @@ export default function Home() {
           <div className="site-header__rule" />
           <span className="site-header__date">{today}</span>
           {user ? (
-            <button className="header-btn" onClick={() => navigate('/favoris')}>♡ Favoris</button>
+            <div className="header-user-menu">
+              <button className="header-btn" onClick={() => navigate('/favoris')}>♡ Favoris</button>
+              <button className="header-btn" onClick={() => navigate('/compte')}>Mon compte</button>
+            </div>
           ) : (
             <button className="header-btn" onClick={() => setShowAuth(true)}>Connexion</button>
           )}

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import EventCard from '../components/EventCard';
+import AuthModal from '../components/AuthModal';
 
 export default function Favorites() {
   const { user, favorites, logout } = useAuth();
@@ -22,9 +23,10 @@ export default function Favorites() {
             <h1 className="favorites-title">Mes favoris</h1>
             <p className="favorites-sub">{user?.email}</p>
           </div>
-          <button className="logout-btn" onClick={() => { logout(); navigate('/'); }}>
-            Déconnexion
-          </button>
+          <div style={{ display: 'flex', gap: '.75rem' }}>
+            <button className="header-btn" onClick={() => navigate('/compte')}>Mon compte</button>
+            <button className="logout-btn" onClick={() => { logout(); navigate('/'); }}>Déconnexion</button>
+          </div>
         </div>
 
         {favorites.length === 0 ? (
