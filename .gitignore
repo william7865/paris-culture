@@ -1,0 +1,38 @@
+# Dépendances
+node_modules/
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build frontend
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
+
+# Refs perso (ne pas exposer sur GitHub)
+CONSIGNES.md
+PLAN.md
+
+# À pusher plus tard
+README.md
+*.pdf
