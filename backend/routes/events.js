@@ -7,7 +7,7 @@ const API_BASE = 'https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/qu
 const LIMIT = 12;
 const CACHE_TTL = parseInt(process.env.CACHE_TTL_MS) || 300_000;
 
-const ALLOWED_CATEGORIES = ['concerts', 'expositions', 'spectacles', 'cinéma', 'sports', 'théâtre', 'jeunesse'];
+const ALLOWED_CATEGORIES = ['Concert', 'Expo', 'Festival', 'Ecrans', 'Sport', 'Théâtre', 'Enfants'];
 
 const SELECT_FIELDS = 'id,url,title,lead_text,date_start,date_end,address_name,address_zipcode,qfap_tags,cover_url,price_type';
 

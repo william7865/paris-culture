@@ -2,13 +2,13 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 const CATEGORY_COLORS = {
-  concerts:    '#e05252',
-  expositions: '#5b8dee',
-  spectacles:  '#9b59b6',
-  cinéma:      '#e67e22',
-  sports:      '#27ae60',
-  théâtre:     '#c0392b',
-  jeunesse:    '#f39c12',
+  concert:  '#e05252',
+  expo:     '#5b8dee',
+  festival: '#9b59b6',
+  ecrans:   '#e67e22',
+  sport:    '#27ae60',
+  théâtre:  '#c0392b',
+  enfants:  '#f39c12',
 };
 
 const getCategoryColor = (tags) => {
