@@ -31,7 +31,7 @@ const getDateCondition = (filter) => {
   return null;
 };
 
-const SELECT_FIELDS = 'id,url,title,lead_text,date_start,date_end,address_name,address_zipcode,qfap_tags,cover_url,price_type';
+const SELECT_FIELDS = 'id,url,title,lead_text,date_start,date_end,address_name,address_zipcode,qfap_tags,cover_url,price_type,lat_lon';
 
 const sanitizeQ = (q) => {
   if (!q || typeof q !== 'string') return '';
@@ -84,6 +84,46 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error(`[events] ${err.message}`);
     res.status(500).json({ error: 'Impossible de récupérer les événements.' });
+  }
+});
+
+router.get('/map', async (req, res) => {
+  const category = ALLOWED_CATEGORIES.includes(req.query.category) ? req.query.category : null;
+  const q = sanitizeQ(req.query.q);
+
+  const today = new Date().toISOString().split('T')[0];
+  const dateCondition = getDateCondition(req.query.dateFilter) ?? `date_end >= "${today}"`;
+  const conditions = [dateCondition];
+  if (category) conditions.push(`qfap_tags like "%${category}%"`);
+  if (q) conditions.push(`search(title, "${q}")`);
+
+  const params = new URLSearchParams({
+    select: SELECT_FIELDS,
+    where: conditions.join(' AND '),
+    order_by: 'date_start asc',
+    limit: 100,
+    offset: 0,
+  });
+
+  const cacheKey = `map:${params.toString()}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return res.json(cached);
+
+  try {
+    const response = await fetch(`${API_BASE}?${params}`);
+    if (!response.ok) throw new Error(`Open Data API error: ${response.status}`);
+
+    const data = await response.json();
+    const results = (data.results ?? []).filter(
+      e => e.lat_lon?.lat && e.lat_lon?.lon
+    );
+
+    const result = { results };
+    cache.set(cacheKey, result, CACHE_TTL);
+    res.json(result);
+  } catch (err) {
+    console.error(`[events/map] ${err.message}`);
+    res.status(500).json({ error: 'Impossible de récupérer les événements pour la carte.' });
   }
 });
 
