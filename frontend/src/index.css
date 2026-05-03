@@ -1207,3 +1207,34 @@ body::after {
     min-height: 380px;
   }
 }
+
+/* ── Thème clair ─────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:        #f5f3ef;
+  --surface:   #edeae3;
+  --card:      #ffffff;
+  --card-hover:#f7f5f0;
+  --border:    #e0ddd6;
+  --text:      #1a1713;
+  --muted:     #8a7f70;
+  --cream:     #1a1713;
+  --shadow:    0 8px 32px rgba(0,0,0,.12);
+}
+
+/* ── Bouton toggle thème ─────────────────────────────── */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--gold);
+}
