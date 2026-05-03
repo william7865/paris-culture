@@ -34,3 +34,17 @@ export async function fetchEvent(id) {
   }
   return res.json();
 }
+
+export async function fetchMapEvents({ q = '', category = 'all', dateFilter = '' } = {}) {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (category && category !== 'all') params.set('category', category);
+  if (dateFilter) params.set('dateFilter', dateFilter);
+
+  const res = await fetch(`${BASE}/map?${params}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur serveur');
+  }
+  return res.json();
+}
