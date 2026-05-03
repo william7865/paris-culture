@@ -5,6 +5,7 @@ const router = express.Router();
 
 const API_BASE = 'https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records';
 const LIMIT = 12;
+const MAP_LIMIT = 100;
 const CACHE_TTL = parseInt(process.env.CACHE_TTL_MS) || 300_000;
 
 const ALLOWED_CATEGORIES = ['Concert', 'Expo', 'Festival', 'Ecrans', 'Sport', 'Théâtre', 'Enfants'];
@@ -100,9 +101,8 @@ router.get('/map', async (req, res) => {
   const params = new URLSearchParams({
     select: SELECT_FIELDS,
     where: conditions.join(' AND '),
-    order_by: 'date_start asc',
-    limit: 100,
-    offset: 0,
+    order_by: ALLOWED_SORT['date_asc'],
+    limit: MAP_LIMIT,
   });
 
   const cacheKey = `map:${params.toString()}`;
