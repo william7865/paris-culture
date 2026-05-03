@@ -27,15 +27,25 @@ const formatDate = (iso) => {
 export default function MapView({ q, category, dateFilter }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(null);
     fetchMapEvents({ q, category, dateFilter })
       .then(data => { if (!cancelled) { setEvents(data.results ?? []); setLoading(false); } })
-      .catch(() => { if (!cancelled) setLoading(false); });
+      .catch(err => { if (!cancelled) { setError(err.message); setLoading(false); } });
     return () => { cancelled = true; };
-  }, [q, category, dateFilter]);
+  }, [q, category, dateFilter, retryCount]);
+
+  if (error) return (
+    <div className="state-message state-message--error" style={{ minHeight: '500px' }}>
+      <p>{error}</p>
+      <button onClick={() => setRetryCount(c => c + 1)}>Réessayer</button>
+    </div>
+  );
 
   return (
     <div className="map-wrapper">

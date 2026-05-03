@@ -75,7 +75,7 @@ export default function Home() {
           </div>
         </div>
 
-        {loading && <Loader />}
+        {view === 'list' && loading && <Loader />}
 
         {error && (
           <div className="state-message state-message--error">
@@ -84,7 +84,7 @@ export default function Home() {
           </div>
         )}
 
-        {!loading && !error && data?.results?.length === 0 && (
+        {view === 'list' && !loading && !error && data?.results?.length === 0 && (
           <div className="state-message"><p>Aucun événement trouvé.</p></div>
         )}
 
