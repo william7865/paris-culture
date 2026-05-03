@@ -1088,7 +1088,7 @@ body::after {
 /* ── Vue toggle ──────────────────────────────────────── */
 .view-toggle {
   display: flex;
-  border: 1.5px solid var(--text);
+  border: 1.5px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;

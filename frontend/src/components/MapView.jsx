@@ -29,10 +29,12 @@ export default function MapView({ q, category, dateFilter }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
     fetchMapEvents({ q, category, dateFilter })
-      .then(data => { setEvents(data.results ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then(data => { if (!cancelled) { setEvents(data.results ?? []); setLoading(false); } })
+      .catch(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [q, category, dateFilter]);
 
   return (
@@ -51,7 +53,7 @@ export default function MapView({ q, category, dateFilter }) {
         {events.map(event => (
           <Marker
             key={event.id}
-            position={[event.lat_lon.lat, event.lat_lon.lon]}
+            position={[event.lat_lon?.lat, event.lat_lon?.lon]}
           >
             <Popup className="event-popup">
               {event.cover_url && (

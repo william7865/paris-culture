@@ -28,6 +28,7 @@ export default function Home() {
   const handleCategory   = useCallback((v) => { setCategory(v);   setPage(1); }, []);
   const handleSort       = useCallback((v) => { setSort(v);       setPage(1); }, []);
   const handleDateFilter = useCallback((v) => { setDateFilter(v); setPage(1); }, []);
+  const handleView       = useCallback((v) => setView(v), []);
 
   const totalPages = data ? Math.ceil(data.total_count / LIMIT) : 0;
   const featured   = data?.results?.[0] ?? null;
@@ -50,14 +51,14 @@ export default function Home() {
               <button
                 className={`view-toggle__btn${view === 'list' ? ' view-toggle__btn--active' : ''}`}
                 aria-pressed={view === 'list'}
-                onClick={() => setView('list')}
+                onClick={() => handleView('list')}
               >
                 ☰ Liste
               </button>
               <button
                 className={`view-toggle__btn${view === 'map' ? ' view-toggle__btn--active' : ''}`}
                 aria-pressed={view === 'map'}
-                onClick={() => setView('map')}
+                onClick={() => handleView('map')}
               >
                 🗺 Carte
               </button>
