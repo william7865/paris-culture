@@ -9,6 +9,7 @@ import QuickDateFilter from '../components/QuickDateFilter';
 import RecentlyViewed from '../components/RecentlyViewed';
 import EventCard from '../components/EventCard';
 import Loader from '../components/Loader';
+import MapView from '../components/MapView';
 
 const LIMIT = 12;
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [sort, setSort]         = useState('date_asc');
   const [dateFilter, setDateFilter] = useState('');
   const [page, setPage]         = useState(1);
+  const [view, setView]         = useState('list');
 
   const { data, loading, error } = useEvents(q, category, page, sort, dateFilter);
 
@@ -44,6 +46,22 @@ export default function Home() {
                 <strong>{data.total_count.toLocaleString('fr-FR')}</strong> événements · page {page} / {totalPages}
               </p>
             )}
+            <div className="view-toggle" role="group" aria-label="Mode d'affichage">
+              <button
+                className={`view-toggle__btn${view === 'list' ? ' view-toggle__btn--active' : ''}`}
+                aria-pressed={view === 'list'}
+                onClick={() => setView('list')}
+              >
+                ☰ Liste
+              </button>
+              <button
+                className={`view-toggle__btn${view === 'map' ? ' view-toggle__btn--active' : ''}`}
+                aria-pressed={view === 'map'}
+                onClick={() => setView('map')}
+              >
+                🗺 Carte
+              </button>
+            </div>
           </div>
           <QuickDateFilter active={dateFilter} onChange={handleDateFilter} />
           <div className="controls__bottom">
@@ -69,7 +87,11 @@ export default function Home() {
           <div className="state-message"><p>Aucun événement trouvé.</p></div>
         )}
 
-        {!loading && !error && data?.results?.length > 0 && (
+        {view === 'map' && (
+          <MapView q={q} category={category} dateFilter={dateFilter} />
+        )}
+
+        {view === 'list' && !loading && !error && data?.results?.length > 0 && (
           <>
             <div className="events-grid">
               {featured && <EventCard key={featured.id} event={featured} featured style={{ animationDelay: '0ms' }} />}
