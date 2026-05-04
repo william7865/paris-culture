@@ -36,6 +36,8 @@ export default function Home() {
   const handleArrondissement = useCallback((v) => { setArrondissement(v); setPage(1); }, []);
   const handleFreeOnly       = useCallback((v) => { setFreeOnly(v);       setPage(1); }, []);
 
+  const advancedCount = (arrondissement !== 'all' ? 1 : 0) + (freeOnly ? 1 : 0);
+
   const totalPages = data ? Math.ceil(data.total_count / LIMIT) : 0;
   const featured   = data?.results?.[0] ?? null;
   const rest       = data?.results?.slice(1) ?? [];
@@ -54,18 +56,13 @@ export default function Home() {
               </p>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
-              {(() => {
-                const advancedCount = (arrondissement !== 'all' ? 1 : 0) + (freeOnly ? 1 : 0);
-                return (
-                  <button
-                    className={`advanced-filters-toggle${showAdvanced ? ' advanced-filters-toggle--active' : ''}`}
-                    onClick={() => setShowAdvanced(v => !v)}
-                    aria-expanded={showAdvanced}
-                  >
-                    Filtres{advancedCount > 0 ? ` (${advancedCount})` : ''}
-                  </button>
-                );
-              })()}
+              <button
+                className={`advanced-filters-toggle${showAdvanced ? ' advanced-filters-toggle--active' : ''}`}
+                onClick={() => setShowAdvanced(v => !v)}
+                aria-expanded={showAdvanced}
+              >
+                Filtres{advancedCount > 0 ? ` (${advancedCount})` : ''}
+              </button>
               <div className="view-toggle" role="group" aria-label="Mode d'affichage">
                 <button
                   className={`view-toggle__btn${view === 'list' ? ' view-toggle__btn--active' : ''}`}
