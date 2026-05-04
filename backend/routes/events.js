@@ -47,6 +47,11 @@ router.get('/', async (req, res) => {
 
   const category = ALLOWED_CATEGORIES.includes(req.query.category) ? req.query.category : null;
   const q = sanitizeQ(req.query.q);
+  const arr = parseInt(req.query.arrondissement, 10);
+  const arrondissementCondition = (!isNaN(arr) && arr >= 1 && arr <= 20)
+    ? `address_zipcode = "750${String(arr).padStart(2, '0')}"`
+    : null;
+  const freeCondition = req.query.free === '1' ? `price_type = "gratuit"` : null;
   const sort = ALLOWED_SORT[req.query.sort] ?? ALLOWED_SORT['date_asc'];
   const offset = (page - 1) * LIMIT;
 
@@ -55,6 +60,8 @@ router.get('/', async (req, res) => {
   const conditions = [dateCondition];
   if (category) conditions.push(`qfap_tags like "%${category}%"`);
   if (q) conditions.push(`search(title, "${q}")`);
+  if (arrondissementCondition) conditions.push(arrondissementCondition);
+  if (freeCondition) conditions.push(freeCondition);
 
   const params = new URLSearchParams({
     select: SELECT_FIELDS,
@@ -91,12 +98,19 @@ router.get('/', async (req, res) => {
 router.get('/map', async (req, res) => {
   const category = ALLOWED_CATEGORIES.includes(req.query.category) ? req.query.category : null;
   const q = sanitizeQ(req.query.q);
+  const arr = parseInt(req.query.arrondissement, 10);
+  const arrondissementCondition = (!isNaN(arr) && arr >= 1 && arr <= 20)
+    ? `address_zipcode = "750${String(arr).padStart(2, '0')}"`
+    : null;
+  const freeCondition = req.query.free === '1' ? `price_type = "gratuit"` : null;
 
   const today = new Date().toISOString().split('T')[0];
   const dateCondition = getDateCondition(req.query.dateFilter) ?? `date_end >= "${today}"`;
   const conditions = [dateCondition];
   if (category) conditions.push(`qfap_tags like "%${category}%"`);
   if (q) conditions.push(`search(title, "${q}")`);
+  if (arrondissementCondition) conditions.push(arrondissementCondition);
+  if (freeCondition) conditions.push(freeCondition);
 
   const params = new URLSearchParams({
     select: SELECT_FIELDS,
