@@ -24,7 +24,7 @@ const formatDate = (iso) => {
   });
 };
 
-export default function MapView({ q, category, dateFilter }) {
+export default function MapView({ q, category, dateFilter, arrondissement = 'all', freeOnly = false }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,11 +34,11 @@ export default function MapView({ q, category, dateFilter }) {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchMapEvents({ q, category, dateFilter })
+    fetchMapEvents({ q, category, dateFilter, arrondissement, freeOnly })
       .then(data => { if (!cancelled) { setEvents(data.results ?? []); setLoading(false); } })
       .catch(err => { if (!cancelled) { setError(err.message); setLoading(false); } });
     return () => { cancelled = true; };
-  }, [q, category, dateFilter, retryCount]);
+  }, [q, category, dateFilter, arrondissement, freeOnly, retryCount]);
 
   if (error) return (
     <div className="state-message state-message--error" style={{ minHeight: '500px' }}>
