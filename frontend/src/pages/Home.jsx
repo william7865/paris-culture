@@ -10,6 +10,7 @@ import RecentlyViewed from '../components/RecentlyViewed';
 import EventCard from '../components/EventCard';
 import Loader from '../components/Loader';
 import MapView from '../components/MapView';
+import CalendarView from '../components/CalendarView';
 import AdvancedFilters from '../components/AdvancedFilters';
 
 const LIMIT = 12;
@@ -78,10 +79,19 @@ export default function Home() {
                 >
                   🗺 Carte
                 </button>
+                <button
+                  className={`view-toggle__btn${view === 'calendar' ? ' view-toggle__btn--active' : ''}`}
+                  aria-pressed={view === 'calendar'}
+                  onClick={() => handleView('calendar')}
+                >
+                  📅 Calendrier
+                </button>
               </div>
             </div>
           </div>
-          <QuickDateFilter active={dateFilter} onChange={handleDateFilter} />
+          {view !== 'calendar' && (
+            <QuickDateFilter active={dateFilter} onChange={handleDateFilter} />
+          )}
           {showAdvanced && (
             <AdvancedFilters
               arrondissement={arrondissement}
@@ -115,6 +125,15 @@ export default function Home() {
 
         {view === 'map' && (
           <MapView q={q} category={category} dateFilter={dateFilter} arrondissement={arrondissement} freeOnly={freeOnly} />
+        )}
+
+        {view === 'calendar' && (
+          <CalendarView
+            q={q}
+            category={category}
+            arrondissement={arrondissement}
+            freeOnly={freeOnly}
+          />
         )}
 
         {view === 'list' && !loading && !error && data?.results?.length > 0 && (
