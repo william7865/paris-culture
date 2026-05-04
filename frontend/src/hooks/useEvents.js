@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchEvents } from '../api/events';
 
-export default function useEvents(q, category, page, sort = 'date_asc', dateFilter = '') {
+export default function useEvents(q, category, page, sort = 'date_asc', dateFilter = '', arrondissement = 'all', freeOnly = false) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ export default function useEvents(q, category, page, sort = 'date_asc', dateFilt
     setLoading(true);
     setError(null);
 
-    fetchEvents({ q, category, page, sort, dateFilter }, controller.signal)
+    fetchEvents({ q, category, page, sort, dateFilter, arrondissement, freeOnly }, controller.signal)
       .then((res) => {
         setData(res);
         setLoading(false);
@@ -23,7 +23,7 @@ export default function useEvents(q, category, page, sort = 'date_asc', dateFilt
       });
 
     return () => controller.abort();
-  }, [q, category, page, sort, dateFilter]);
+  }, [q, category, page, sort, dateFilter, arrondissement, freeOnly]);
 
   return { data, loading, error };
 }
