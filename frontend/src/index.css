@@ -1221,6 +1221,11 @@ body::after {
   --shadow:    0 8px 32px rgba(0,0,0,.12);
 }
 
+/* ── Header thème clair ──────────────────────────────── */
+[data-theme="light"] .site-header {
+  background: rgba(245, 243, 239, .92);
+}
+
 /* ── Bouton toggle thème ─────────────────────────────── */
 .theme-toggle {
   background: transparent;
