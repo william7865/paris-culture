@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import AuthModal from './AuthModal';
 
 export default function Header({ backBtn = false }) {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [showAuth, setShowAuth] = useState(false);
 
@@ -34,6 +36,13 @@ export default function Header({ backBtn = false }) {
               <button className="header-btn" onClick={() => setShowAuth(true)}>Connexion</button>
             )}
           </nav>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
+          >
+            {theme === 'dark' ? '☾ Clair' : '☀ Sombre'}
+          </button>
         </div>
       </header>
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
