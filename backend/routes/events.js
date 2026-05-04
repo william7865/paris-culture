@@ -56,8 +56,21 @@ router.get('/', async (req, res) => {
   const offset = (page - 1) * LIMIT;
 
   const today = new Date().toISOString().split('T')[0];
-  const dateCondition = getDateCondition(req.query.dateFilter) ?? `date_end >= "${today}"`;
+
+  const isValidDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s);
+  const dateFrom = isValidDate(req.query.dateFrom) ? req.query.dateFrom : null;
+  const dateTo   = isValidDate(req.query.dateTo)   ? req.query.dateTo   : null;
+
+  let dateCondition;
+  if (dateFrom) {
+    dateCondition = `date_end >= "${dateFrom}"`;
+  } else {
+    dateCondition = getDateCondition(req.query.dateFilter) ?? `date_end >= "${today}"`;
+  }
+  const dateToCondition = dateTo ? `date_start <= "${dateTo}"` : null;
+
   const conditions = [dateCondition];
+  if (dateToCondition) conditions.push(dateToCondition);
   if (category) conditions.push(`qfap_tags like "%${category}%"`);
   if (q) conditions.push(`search(title, "${q}")`);
   if (arrondissementCondition) conditions.push(arrondissementCondition);
