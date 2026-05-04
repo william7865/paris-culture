@@ -1,10 +1,12 @@
 const BASE = '/api/events';
 
-export async function fetchEvents({ q = '', category = 'all', page = 1, sort = 'date_asc', dateFilter = '' } = {}, signal) {
+export async function fetchEvents({ q = '', category = 'all', page = 1, sort = 'date_asc', dateFilter = '', arrondissement = 'all', freeOnly = false } = {}, signal) {
   const params = new URLSearchParams({ page, sort });
   if (q) params.set('q', q);
   if (category && category !== 'all') params.set('category', category);
   if (dateFilter) params.set('dateFilter', dateFilter);
+  if (arrondissement && arrondissement !== 'all') params.set('arrondissement', arrondissement);
+  if (freeOnly) params.set('free', '1');
 
   const res = await fetch(`${BASE}?${params}`, { signal });
   if (!res.ok) {
@@ -35,11 +37,13 @@ export async function fetchEvent(id) {
   return res.json();
 }
 
-export async function fetchMapEvents({ q = '', category = 'all', dateFilter = '' } = {}) {
+export async function fetchMapEvents({ q = '', category = 'all', dateFilter = '', arrondissement = 'all', freeOnly = false } = {}) {
   const params = new URLSearchParams();
   if (q) params.set('q', q);
   if (category && category !== 'all') params.set('category', category);
   if (dateFilter) params.set('dateFilter', dateFilter);
+  if (arrondissement && arrondissement !== 'all') params.set('arrondissement', arrondissement);
+  if (freeOnly) params.set('free', '1');
 
   const res = await fetch(`${BASE}/map?${params}`);
   if (!res.ok) {
