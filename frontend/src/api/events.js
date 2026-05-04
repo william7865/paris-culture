@@ -52,3 +52,20 @@ export async function fetchMapEvents({ q = '', category = 'all', dateFilter = ''
   }
   return res.json();
 }
+
+export async function fetchCalendarEvents({ q = '', category = 'all', arrondissement = 'all', freeOnly = false, dateFrom, dateTo } = {}) {
+  const params = new URLSearchParams({ page: 1, sort: 'date_asc' });
+  if (q) params.set('q', q);
+  if (category && category !== 'all') params.set('category', category);
+  if (arrondissement && arrondissement !== 'all') params.set('arrondissement', arrondissement);
+  if (freeOnly) params.set('free', '1');
+  if (dateFrom) params.set('dateFrom', dateFrom);
+  if (dateTo)   params.set('dateTo', dateTo);
+
+  const res = await fetch(`${BASE}?${params}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur serveur');
+  }
+  return res.json();
+}
